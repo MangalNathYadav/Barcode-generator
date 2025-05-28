@@ -1,29 +1,102 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Product Info Barcode Generator</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Product Barcode Generator</title>
   <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+
   <style>
-    body { font-family: sans-serif; text-align: center; padding: 30px; background: #fafafa; }
-    input { margin: 5px; padding: 10px; width: 300px; font-size: 16px; }
-    button { padding: 10px 20px; font-size: 16px; margin-top: 10px; }
-    canvas { margin-top: 20px; border: 1px solid #000; background: #fff; }
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #f0f4f8, #d9e2ec);
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .container {
+      background: rgba(255, 255, 255, 0.9);
+      backdrop-filter: blur(10px);
+      padding: 40px;
+      border-radius: 20px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+      max-width: 500px;
+      width: 100%;
+      text-align: center;
+    }
+
+    h1 {
+      margin-bottom: 20px;
+      font-size: 28px;
+      color: #333;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px 16px;
+      margin: 10px 0;
+      border: 2px solid #ccc;
+      border-radius: 10px;
+      font-size: 16px;
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    input:focus {
+      outline: none;
+      border-color: #3f8efc;
+      box-shadow: 0 0 5px rgba(63, 142, 252, 0.4);
+    }
+
+    button {
+      margin: 10px 8px 0;
+      padding: 12px 20px;
+      font-size: 16px;
+      border: none;
+      border-radius: 8px;
+      background: #3f8efc;
+      color: white;
+      cursor: pointer;
+      transition: background 0.3s ease, transform 0.2s ease;
+    }
+
+    button:hover {
+      background: #367be4;
+      transform: translateY(-2px);
+    }
+
+    canvas {
+      margin-top: 30px;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      padding: 10px;
+    }
   </style>
 </head>
+
 <body>
+  <div class="container">
+    <h1>Barcode Generator</h1>
+    <input type="text" id="productId" placeholder="Product ID" />
+    <input type="text" id="productName" placeholder="Product Name" />
+    <input type="date" id="mfgDate" placeholder="Manufacturing Date" />
+    <input type="text" id="price" placeholder="Price (e.g. ₹49.00)" />
 
-  <h1>Product Barcode Generator</h1>
+    <div>
+      <button onclick="generateBarcode()">Generate</button>
+      <button onclick="downloadBarcode()">Download</button>
+    </div>
 
-  <input type="text" id="productId" placeholder="Product ID" /><br/>
-  <input type="text" id="productName" placeholder="Product Name" /><br/>
-  <input type="date" id="mfgDate" placeholder="Manufacturing Date" /><br/>
-  <input type="text" id="price" placeholder="Price (e.g. ₹49.00)" /><br/>
-
-  <button onclick="generateBarcode()">Generate Barcode</button>
-  <button onclick="downloadBarcode()">Download PNG</button>
-
-  <canvas id="barcodeCanvas"></canvas>
+    <canvas id="barcodeCanvas"></canvas>
+  </div>
 
   <script>
     function generateBarcode() {
@@ -33,12 +106,12 @@
       const price = document.getElementById('price').value.trim();
 
       if (!id || !name || !date || !price) {
-        alert("Please fill all fields");
+        alert("Please fill in all fields.");
         return;
       }
 
-      const barcodeValue = `${id}|${name}|${date}|${price}`;
-      JsBarcode("#barcodeCanvas", barcodeValue, {
+      const data = `${id}|${name}|${date}|${price}`;
+      JsBarcode("#barcodeCanvas", data, {
         format: "CODE128",
         lineColor: "#000",
         width: 2,
@@ -50,11 +123,10 @@
     function downloadBarcode() {
       const canvas = document.getElementById('barcodeCanvas');
       const link = document.createElement('a');
-      link.download = 'product_barcode.png';
+      link.download = 'barcode.png';
       link.href = canvas.toDataURL("image/png");
       link.click();
     }
   </script>
-
 </body>
 </html>
