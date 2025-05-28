@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Product Info Barcode Generator</title>
+  <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
+  <style>
+    body { font-family: sans-serif; text-align: center; padding: 30px; background: #fafafa; }
+    input { margin: 5px; padding: 10px; width: 300px; font-size: 16px; }
+    button { padding: 10px 20px; font-size: 16px; margin-top: 10px; }
+    canvas { margin-top: 20px; border: 1px solid #000; background: #fff; }
+  </style>
+</head>
+<body>
+
+  <h1>Product Barcode Generator</h1>
+
+  <input type="text" id="productId" placeholder="Product ID" /><br/>
+  <input type="text" id="productName" placeholder="Product Name" /><br/>
+  <input type="date" id="mfgDate" placeholder="Manufacturing Date" /><br/>
+  <input type="text" id="price" placeholder="Price (e.g. ₹49.00)" /><br/>
+
+  <button onclick="generateBarcode()">Generate Barcode</button>
+  <button onclick="downloadBarcode()">Download PNG</button>
+
+  <canvas id="barcodeCanvas"></canvas>
+
+  <script>
+    function generateBarcode() {
+      const id = document.getElementById('productId').value.trim();
+      const name = document.getElementById('productName').value.trim();
+      const date = document.getElementById('mfgDate').value;
+      const price = document.getElementById('price').value.trim();
+
+      if (!id || !name || !date || !price) {
+        alert("Please fill all fields");
+        return;
+      }
+
+      const barcodeValue = `${id}|${name}|${date}|${price}`;
+      JsBarcode("#barcodeCanvas", barcodeValue, {
+        format: "CODE128",
+        lineColor: "#000",
+        width: 2,
+        height: 100,
+        displayValue: false
+      });
+    }
+
+    function downloadBarcode() {
+      const canvas = document.getElementById('barcodeCanvas');
+      const link = document.createElement('a');
+      link.download = 'product_barcode.png';
+      link.href = canvas.toDataURL("image/png");
+      link.click();
+    }
+  </script>
+
+</body>
+</html>
