@@ -40,3 +40,8 @@ This project is licensed under the terms of the MIT License. See the `LICENSE` f
 
 ## Screenshots
 ![Screenshot of the Barcode Generator](screenshot.png)
+
+---
+
+## Developer
+Created by **Mangal Nath Yadav** aka **mghacker**
