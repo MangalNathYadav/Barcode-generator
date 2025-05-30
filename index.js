@@ -1,4 +1,8 @@
- const para= document.querySelectorAll("p");
+//STYlING =======================================================
+//=================================================================
+
+
+const para= document.querySelectorAll("p");
     
         // This function applies CSS styles to all <p> elements
       for(let i =0 ; i<para.length; i++){
@@ -107,4 +111,34 @@
             fooStyle.color = "#555";
         }
 
+// Generate barcode function=======================================
+//================================================================
+ function generateBarcode() {
+      const bestBefore = document.getElementById('bestBefore').value.trim();
+      const manufacturing= document.getElementById('manufacturing').value.trim();
+      const netWeight = document.getElementById('netWeight').value;
+      const price = document.getElementById('price').value.trim();
+
+      if (!bestBefore || !manufacturing || !netWeight || !price) {
+        alert("Please fill in all fields.");
+        return;
+      }
+
+      const data = `${bestBefore}|${manufacturing}|${netWeight}|${price}`;
+      JsBarcode("#barcodeCanvas", data, {
+        format: "CODE128",
+        lineColor: "#000",
+        width:1,
+        height: 80,
+        displayValue: false
+      });
+    }
+
+    function downloadBarcode() {
+      const canvas = document.getElementById('barcodeCanvas');
+      const link = document.createElement('a');
+      link.download = 'barcode.png';
+      link.href = canvas.toDataURL("image/png");
+      link.click();
+    }
     
