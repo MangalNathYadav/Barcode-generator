@@ -16,7 +16,8 @@ document.querySelectorAll('*').forEach(el => {
 
 //body css
 const bodyCss= document.body.style
-bodyCss.margin= "50px";
+bodyCss.margin= "20px";
+bodyCss.marginTop="50px";
 bodyCss.fontFamily=" 'Poppins',sans-serif";
 bodyCss.background = "linear-gradient(135deg,#f0f4f8,#d9e2ec";
 bodyCss.minHeight = "100vh";
@@ -37,6 +38,11 @@ containerCss.textAlign = "center";
 containerCss.padding = "40px";
 containerCss.marginTop = "5px";
 containerCss.paddingTop = "5px";
+// Make container responsive on small screens
+if (window.innerWidth < 600) {
+  containerCss.padding = "20px 15px";
+  containerCss.width = "95%";
+}
 
 
 //h1 css
@@ -93,11 +99,13 @@ for(let i = 0; i < buttonCss.length; i++) {
 const canvasCss = document.querySelectorAll("canvas");
 for(let i = 0; i < canvasCss.length; i++) {
     const canStyle = canvasCss[i].style;
-    canStyle.margin = "30px";
+    canStyle.margin = "20px auto"; // Center horizontally
     canStyle.background = "white";
     canStyle.borderRadius = "10px";
     canStyle.boxShadow = "0 4px 10px rgba(0, 0, 0, 0.1)";
     canStyle.padding = "10px";
+    canStyle.maxWidth = "100%"; // Ensure it doesn't overflow container
+    canStyle.display = "block"; // Block display to respect container width
 }
          
 // footer css
@@ -150,11 +158,12 @@ function generateBarcode() {
   });
   // Display the serial number below the barcode
   const serialNumberDisplay = document.getElementById('serialNumberDisplay');
-  serialNumberDisplay.textContent = `Serial Number: ${serialNumber}`;
-  // Dynamically resize the canvas using CSS
+  serialNumberDisplay.textContent = `Serial Number: ${serialNumber}`;  // Dynamically resize the canvas using CSS
   const canvas = document.getElementById('barcodeCanvas');
-  canvas.style.width = "350px"; // Set the desired display width
-  canvas.style.height = "120px"; // Set the desired display height
+  // Make the canvas responsive
+  canvas.style.width = "100%"; // Use percentage for responsiveness
+  canvas.style.maxWidth = "350px"; // Maximum width on larger screens
+  canvas.style.height = "auto"; // Maintain aspect ratio
 }
 
 function downloadBarcode() {
@@ -164,6 +173,24 @@ function downloadBarcode() {
   link.href = canvas.toDataURL("image/png");
   link.click();
 }
+
+// Handle window resize for responsiveness
+window.addEventListener('resize', function() {
+  const containerCss = document.querySelector(".container").style;
+  if (window.innerWidth < 600) {
+    containerCss.padding = "20px 15px";
+    containerCss.width = "95%";
+  } else {
+    containerCss.padding = "40px";
+    containerCss.width = "100%";
+  }
+  
+  // Adjust any canvas that exists
+  const canvas = document.getElementById('barcodeCanvas');
+  if (canvas) {
+    canvas.style.maxWidth = window.innerWidth < 400 ? "90%" : "350px";
+  }
+});
 
 
 
