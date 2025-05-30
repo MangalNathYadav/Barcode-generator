@@ -50,5 +50,75 @@
   </div>
 
 <script src="index.js"></script>
+<script type="module">  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-app.js";
+  import { getDatabase, ref, get, child, set } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-database.js";
+  // Make barcodeSN globally available
+  window.barcodeSN = 0;
+  
+  // Add a function to update Firebase with just the barcode number
+  window.updateBarcodeNumber = function(newValue) {
+    const db = getDatabase();
+    set(ref(db, 'snid'), newValue)
+      .then(() => console.log("Updated barcodeSN in Firebase to", newValue))
+      .catch((error) => console.error("Error updating barcodeSN:", error));
+  };
+  
+  // Function to store full barcode data in Firebase
+  window.storeBarcodeData = function(serialNumber, data) {
+    const db = getDatabase();
+    // Split data into components (comes in format SN000000|bestBefore|manufacturing|netWeight|price|productId)
+    const dataParts = data.split('|');
+    
+    // Create a structured object with all barcode information
+    const barcodeData = {
+      serialNumber: serialNumber,
+      bestBefore: dataParts[1],
+      manufacturing: dataParts[2],
+      netWeight: dataParts[3],
+      price: dataParts[4],
+      productId: dataParts[5],
+      timestamp: new Date().toISOString()
+    };
+    
+    // Store under 'barcodes/[serialNumber]' path
+    set(ref(db, 'barcodes/' + serialNumber), barcodeData)
+      .then(() => console.log("Stored barcode data for", serialNumber))
+      .catch((error) => console.error("Error storing barcode data:", error));
+  };
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyAQbGilKLGRYoYpl1j4W2gsUw1Eu2c3mmA",
+    authDomain: "barcode-generator-1fcfa.firebaseapp.com",
+    projectId: "barcode-generator-1fcfa",
+    storageBucket: "barcode-generator-1fcfa.firebasestorage.app",
+    messagingSenderId: "154371649686",
+    appId: "1:154371649686:web:b753ea65d302ac093512b7",
+    measurementId: "G-5WCGBPMKCL"
+  };
+ // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+
+  // Initialize Realtime Database
+  const db = getDatabase(app);
+
+  // Read 'snid' value from database
+  const dbRef = ref(db);
+
+  get(child(dbRef, 'snid'))
+    .then((snapshot) => {
+      if (snapshot.exists()) {
+        window.barcodeSN = snapshot.val();
+        console.log("Loaded barcodeSN:", window.barcodeSN);
+      } else {
+        console.log("No data found at 'snid', using default value");
+      }
+    })
+    .catch((error) => {
+      console.error("Error getting data:", error);
+    });
+
+ 
+</script>
+
 </body>
 </html>

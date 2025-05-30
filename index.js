@@ -110,9 +110,10 @@ for(let i = 0; i < footerCss.length; i++) {
     fooStyle.color = "#555";
 }
 
+
 // Generate barcode function=======================================
 //================================================================
-let barcodeSN= 1;
+
 function generateBarcode() {
   const bestBefore = document.getElementById('bestBefore').value.trim();
   const manufacturing= document.getElementById('manufacturing').value.trim();
@@ -124,12 +125,21 @@ function generateBarcode() {
     alert("Please fill in all fields.");
     return;
   }
-
-  // Generate a unique serial number
-  const serialNumber = `SN${barcodeSN.toString().padStart(6, '0')}`;
-  barcodeSN++; // Increment the serial number for the next barcode
+  // Generate a unique serial number using the global barcodeSN
+  const serialNumber = `SN${window.barcodeSN.toString().padStart(6, '0')}`;
+  window.barcodeSN++; // Increment the serial number for the next barcode
+  
+  // Update the value in Firebase
+  if (typeof window.updateBarcodeNumber === 'function') {
+    window.updateBarcodeNumber(window.barcodeSN);
+  }
 
   const data = `${serialNumber}|${bestBefore}|${manufacturing}|${netWeight}|${price}|${productId}`;
+  
+  // Store all barcode data in Firebase
+  if (typeof window.storeBarcodeData === 'function') {
+    window.storeBarcodeData(serialNumber, data);
+  }
         
   JsBarcode("#barcodeCanvas", data, {
     format: "CODE128",
@@ -154,3 +164,6 @@ function downloadBarcode() {
   link.href = canvas.toDataURL("image/png");
   link.click();
 }
+
+
+
