@@ -99,6 +99,7 @@ const para= document.querySelectorAll("p");
             canStyle.borderRadius = "10px";
             canStyle.boxShadow = "0 4px 10px rgba(0, 0, 0, 0.1)";
             canStyle.padding = "10px";
+            canStyle.alignContent = "center";
         }
         
         // footer css
@@ -118,13 +119,14 @@ const para= document.querySelectorAll("p");
       const manufacturing= document.getElementById('manufacturing').value.trim();
       const netWeight = document.getElementById('netWeight').value;
       const price = document.getElementById('price').value.trim();
+      const productId = document.getElementById('productId').value.trim();
 
-      if (!bestBefore || !manufacturing || !netWeight || !price) {
+      if (!bestBefore || !manufacturing || !netWeight || !price || !productId) {
         alert("Please fill in all fields.");
         return;
       }
 
-      const data = `${bestBefore}|${manufacturing}|${netWeight}|${price}`;
+      const data = `${bestBefore}|${manufacturing}|${netWeight}|${price}|${productId}`;
       JsBarcode("#barcodeCanvas", data, {
         format: "CODE128",
         lineColor: "#000",
