@@ -118,11 +118,15 @@ for(let i = 0; i < footerCss.length; i++) {
     fooStyle.color = "#555";
 }
 
+document.querySelector("#barcodeColor").style.height = "80px"; // Set a fixed height for the color input
 
-// Generate barcode function=======================================
+// document.querySelector("#barcodeColor").style.padding = "10px"; // Set a fixed height for the color input
+// Generate barcode functio====================================
 //================================================================
 
 function generateBarcode() {
+  const color = document.querySelector("#barcodeColor").value.trim();
+
   const bestBefore = document.getElementById('bestBefore').value.trim();
   const manufacturing= document.getElementById('manufacturing').value.trim();
   const netWeight = document.getElementById('netWeight').value;
@@ -151,7 +155,7 @@ function generateBarcode() {
         
   JsBarcode("#barcodeCanvas", data, {
     format: "CODE128",
-    lineColor: "#000",
+    lineColor: color,
     width:1.5,
     height: 100,
     displayValue: false
